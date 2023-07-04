@@ -1,14 +1,137 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ДЗ 39</title>
+    <script>
+        function getProducts() {
+            fetch('http://localhost:9000/products')
+                .then(response => response.json())
+                .then(data => console.log(data))
+                .catch(error => console.log(error));
+        }
+
+        function addProduct() {
+            const idInput = document.getElementById('id');
+            const itemInput = document.getElementById('item');
+            const unitsInput = document.getElementById('units');
+            const priceInput = document.getElementById('price');
+
+            const newProduct = {
+                id: idInput.value,
+                item: itemInput.value,
+                units: unitsInput.value,
+                price: priceInput.value
+            };
+
+            fetch('http://localhost:9000/products', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(newProduct)
+            })
+                .then(response => response.json())
+                .then(data => console.log(data))
+                .catch(error => console.log(error));
+        }
+
+        function updateProduct() {
+            const idInput = document.getElementById('update-id');
+            const itemInput = document.getElementById('update-item');
+            const unitsInput = document.getElementById('update-units');
+            const priceInput = document.getElementById('update-price');
+
+            const updatedProduct = {
+                item: itemInput.value,
+                units: unitsInput.value,
+                price: priceInput.value
+            };
+
+            fetch(`http://localhost:9000/products/${idInput.value}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(updatedProduct)
+            })
+                .then(response => response.json())
+                .then(data => console.log(data))
+                .catch(error => console.log(error));
+        }
+
+        function deleteProduct() {
+            const idInput = document.getElementById('delete-id');
+
+            fetch(`http://localhost:9000/products/${idInput.value}`, {
+                method: 'DELETE'
+            })
+                .then(response => {
+                    if (response.status === 204) {
+                        console.log('Product deleted successfully');
+                    } else {
+                        console.log('Failed to delete product');
+                    }
+                })
+                .catch(error => console.log(error));
+        }
+    </script>
 </head>
 <body>
+<div>
+    <button onclick="getProducts()">Get products</button>
+</div>
 
-<script src="main.js"></script>
+<h2>Add Product</h2>
+<div>
+    <div>
+    <label for="id">ID:</label>
+    <input type="text" id="id">
+    </div><br>
+    <div>
+    <label for="item">Item:</label>
+    <input type="text" id="item">
+    </div><br>
+    <div>
+    <label for="units">Units:</label>
+    <input type="text" id="units">
+    </div><br>
+    <div>
+    <label for="price">Price:</label>
+    <input type="text" id="price">
+    </div><br>
+    <button onclick="addProduct()">Add Product</button>
+</div>
+
+<h2>Update Product</h2>
+<div>
+    <div>
+    <label for="update-id">ID:</label>
+    <input type="text" id="update-id">
+    </div><br>
+    <div>
+    <label for="update-item">Item:</label>
+    <input type="text" id="update-item">
+    </div><br>
+    <div>
+    <label for="update-units">Units:</label>
+    <input type="text" id="update-units">
+    </div><br>
+    <div>
+    <label for="update-price">Price:</label>
+    <input type="text" id="update-price">
+    </div><br>
+    <button onclick="updateProduct()">Update Product</button>
+</div>
+
+<h2>Delete Product</h2>
+<div>
+    <div>
+    <label for="delete-id">ID:</label>
+    <input type="text" id="delete-id">
+    </div><br>
+    <button onclick="deleteProduct()">Delete Product</button>
+</div>
 </body>
 </html>
